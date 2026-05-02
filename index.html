@@ -2,286 +2,317 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>أزرار احترافية</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>بطاقات المباريات | نمط Netflix</title>
   <style>
-    body {
-      background-color: #000000;
-      color: white;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 20px;
-      user-select: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-    }
-
-    .button-container {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      align-items: center;
-      gap: 20px;
-      justify-content: center;
-    }
-
-    .button {
-      display: inline-block;
-      width: 150px;
-      height: 150px;
-      background: linear-gradient(145deg, #000, #000);
-      border: 1.75px solid white;
-      border-radius: 15px;
-      text-align: center;
-      padding: 10px;
-      color: white;
-      font-size: 14px;
-      text-decoration: none;
-      position: relative;
-      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
-      overflow: hidden;
-      cursor: pointer;
-    }
-
-    .button::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-      transition: left 0.5s;
-    }
-
-    .button:hover::before {
-      left: 100%;
-    }
-
-    .button:hover {
-      transform: translateY(-5px) scale(1.02);
-    }
-
-    .button:active {
-      transform: translateY(-2px) scale(0.98);
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-    }
-
-    .button img {
-      width: 70%;
-      height: 70%;
-      object-fit: cover;
-      border-radius: 10px;
-      transition: all 0.3s ease;
-    }
-
-    .button:hover img {
-      transform: scale(1.05);
-    }
-
-    .button-text {
-      position: absolute;
-      bottom: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 13px;
-      font-weight: bold;
-      letter-spacing: 0.5px;
-      line-height: 1.4;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    }
-
     * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
     }
 
-    @media screen and (orientation: landscape) {
-      .button-container {
-        grid-template-columns: repeat(4, 1fr);
-      }
-      .button {
-        width: 120px;
-        height: 120px;
-      }
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      font-family: 'Netflix Sans', 'Segoe UI', 'Helvetica Neue', system-ui, -apple-system, 'Roboto', sans-serif;
+      padding: 20px 24px 40px 24px;
+      letter-spacing: 0.2px;
+      min-height: 100vh;
     }
 
+    /* رأس الصفحة مع شريط البحث فقط */
+    .search-header {
+      max-width: 1440px;
+      margin: 0 auto 36px auto;
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-bar {
+      width: 100%;
+      max-width: 480px;
+      background-color: #121212;
+      border: 1px solid #2c2c2c;
+      border-radius: 60px;
+      padding: 12px 24px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 500;
+      outline: none;
+      transition: all 0.25s ease;
+      font-family: inherit;
+      text-align: right;
+      direction: rtl;
+    }
+
+    .search-bar::placeholder {
+      color: #aaaaaa;
+      font-weight: 400;
+      font-size: 0.95rem;
+    }
+
+    .search-bar:focus {
+      border-color: #ffffff;
+      background-color: #1a1a1a;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
+    }
+
+    /* شبكة البطاقات - مربعات مثالية */
+    .posters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 32px 24px;
+      max-width: 1440px;
+      margin: 0 auto;
+      justify-items: center;
+      align-items: start;
+    }
+
+    /* البطاقة المربعة (aspect-ratio 1/1) مثل بوستر مربع أنيق */
+    .poster-card {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      max-width: 260px;
+      background: #0b0b0b;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #262626;
+      transition: all 0.28s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      cursor: pointer;
+      box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.8);
+      text-decoration: none;
+    }
+
+    /* صورة مربعة تمامًا 1:1 */
+    .poster-card img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease, filter 0.3s ease;
+      background-color: #111;
+    }
+
+    .poster-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: #ffffff;
+      box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255,255,255,0.2);
+    }
+
+    .poster-card:hover img {
+      transform: scale(1.03);
+      filter: brightness(1.05);
+    }
+
+    .poster-card:active {
+      transform: translateY(-2px) scale(0.99);
+      transition: 0.05s linear;
+    }
+
+    /* عنوان المباراة أسفل الصورة */
+    .match-title {
+      padding: 14px 12px 16px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.3px;
+      background: linear-gradient(0deg, #0a0a0a 85%, #111111 100%);
+      color: #f0f0f0;
+      border-top: 1px solid #262626;
+      transition: background 0.2s, color 0.2s;
+      line-height: 1.4;
+    }
+
+    .poster-card:hover .match-title {
+      background: #111111;
+      color: white;
+      border-top-color: #3d3d3d;
+    }
+
+    /* زر الصفحة الرئيسية (ثابت أسفل يمين) */
     .home-button {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: linear-gradient(145deg, #000, #000);
-      border: 3px solid white;
-      color: white;
-      border-radius: 50px;
+      bottom: 24px;
+      right: 24px;
+      background: #0f0f0f;
+      border: 1.8px solid #ffffff;
+      border-radius: 60px;
       padding: 12px 20px;
       display: flex;
       align-items: center;
+      justify-content: center;
       cursor: pointer;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
-      z-index: 1000;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+      z-index: 1100;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(4px);
+      background-color: rgba(10, 10, 10, 0.85);
+    }
+
+    .home-button:hover {
+      background: #1f1f1f;
+      border-color: #fff;
+      transform: scale(1.02);
+      box-shadow: 0 10px 24px black;
     }
 
     .home-button svg {
-      width: 50px;
-      height: 27px;
+      width: 26px;
+      height: 26px;
       fill: white;
-      
-    
+      transition: transform 0.2s;
+    }
+
+    .home-button:active svg {
+      transform: scale(0.94);
+    }
+
+    /* رسالة عدم وجود نتائج */
+    .no-results {
+      text-align: center;
+      grid-column: 1 / -1;
+      padding: 60px 20px;
+      font-size: 1.2rem;
+      color: #aaa;
+      background: #050505;
+      border-radius: 32px;
+      margin-top: 20px;
+      border: 1px dashed #2c2c2c;
+    }
+
+    /* استجابة للشاشات الصغيرة */
+    @media (max-width: 640px) {
+      body {
+        padding: 16px 16px 70px 16px;
+      }
+      .posters-grid {
+        gap: 20px 16px;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      }
+      .match-title {
+        font-size: 0.8rem;
+        padding: 10px 8px 12px;
+      }
+      .search-bar {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        max-width: 95%;
+      }
+      .home-button {
+        bottom: 16px;
+        right: 16px;
+        padding: 8px 16px;
+      }
+      .home-button svg {
+        width: 22px;
+        height: 22px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .posters-grid {
+        grid-template-columns: repeat(5, minmax(190px, 220px));
+        justify-content: center;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 600px) {
+      .posters-grid {
+        gap: 16px;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+      .match-title {
+        padding: 6px 6px 8px;
+        font-size: 0.75rem;
+      }
+    }
+
+    img {
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
 
+  <!-- شريط البحث (النص: ابحث عن مباراة) -->
+  <div class="search-header">
+    <input type="text" id="searchInput" class="search-bar" placeholder="ابحث عن مباراة" autocomplete="off">
+  </div>
+
+  <!-- شبكة البطاقات المربعة -->
+  <div class="posters-grid" id="postersGrid"></div>
+
   <!-- زر الصفحة الرئيسية -->
-  <div class="home-button" onclick="window.location.href='https://varref.github.io/var/'">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <div class="home-button" onclick="window.location.href='https://varref.github.io/var/'" aria-label="الصفحة الرئيسية">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
       <path d="M12 3 2 12h3v8h6v-5h2v5h6v-8h3Z"></path>
     </svg>
   </div>
 
-  <!-- الأزرار -->
-  <div class="button-container">
+  <script>
+    // جميع بيانات المباريات (نفس المحتوى الأصلي)
+    const matchesData = [
+      { title: "RM × LIV", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEisBzm-sCcOmAbMT-Ba0xc86KtPirdQBIXADW3saQqkmmwR9TNUAGDD0Xa3zu_yhoC1kjuMCCJwsxEz-LflA2NtknaIvgDU124-mIe_grBL70CEzSW57TlVCRM11ePgBChw30BBChvqwABl1b73rjeveTEV49_0DU90egd9P27MedkRH9LGN5oPr0-P/s320/Picsart_25-08-31_12-28-40-953.jpg", link: "https://rumble.com/hls-vod/72uetm/playlist.m3u8" },
+      { title: "FCB × ARS", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibPka-KpOtpnAPXi-4QMSi4LH0gdtsQz2al-7kCwwBZ9gO-bMZLqS62WyNlyFQrzdTF3q_5BWqFMjpvatYLPxYdtW1aQESkn8yEvxFJujMbrY-zdw08Q64lMtLTmyEeFpZfb4SiAnT-NSkF-Wv00MlM2zAicJsgPi6TTnZJQfbXl1qoruibdxVIWit/s320/Picsart_25-08-28_13-44-11-577.jpg", link: "go:M2" },
+      { title: "POR × FRA", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjO3iXrLT1RsP7G_xaGA8M6qv8qvlBRmICwNorc7hZruMQthphmEDhm23PylflKNbXcBxra_LbzQWgGpfKBh-N7Qu960zUNWfDNIadEKwudO256zYf1Xz6uFUXan405-H3XeX_MduQvsOaoU__k3qXLJGi8iUDnQ-x8Q2tRdj0W1HHuHkthBDcqpyua/s320/Picsart_25-08-27_17-08-49-077.jpg", link: "go:M3" },
+      { title: "BRA × GER", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi0pMQSXTe-vmJTBfWOU_7qKNgWn6O59hOAEg2qqsjTF0mNNE-w_PVegQm6ko8pB76Xw7l8FOvOTukN9bE-H9phz3W0eHeYsbLgeD9U93bkJjVzBz9Rk8Xg1wukXz5PstCQC8BBObQ5stKFT6x831CZCTH46qkgi_mb5gY8Dllj7KtcmufOBuiGqpvF/s320/Picsart_25-08-29_12-12-24-952.jpg", link: "go:M4" },
+      { title: "ARG × FRA", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhNfbpWWxFizDaQrEh5-Jh0MzHmBGVSp-6pxjgv1SPP-jTZyW2-oaV7x6E-LscJYp6GX_NC0dj1v4Y6xcXmbK_n-fwM6L9269g06bMcl2xxQckdHvFznDCtbCtvhHW5Flim97aJFJrvtsFDH9BCu4WCpuPBBdkRgVddQGdoJ-FobezsCtf2rN7SHla8/s320/Picsart_25-08-04_11-46-40-769.jpg", link: "go:M5" },
+      { title: "FCB × RM", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj4yV27yvjTXWHxMrcTazqHXlyVZKOpJI_FubJVMDW3tvyQP7KFjUo-Z1ADXd2_KlWg8PESbvwket4oXtocMPC16rl5NyLonYfFS9BlvS-7K-vaJ3JKpLwL_8dB6BcksSckW7_bOCaRGuhUGsai9vhf1iWKXTcu2JdSLpM13XAUHkb7vxDFktRBJMq5/s320/Picsart_25-08-16_08-05-50-229.jpg", link: "go:M6" },
+      { title: "GER × BRA", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhc3RXwfBlsGdiaEagpWgsN3K0da93mDEdPNq1TJnag_RL3NTxrXkLt8F_74hnJ3eZgB8xTz5EJs4_0s62Ou-kDUzte5jyKaDWaV2y8ISRFYG0y4H_CrlIBoN7go3tm7c5Etb0wBOUnYRrhmoU0zzTsDXhXYc5T4PiliG4yh6IL0uRDmCmqb39eSfKU/s320/Picsart_25-08-17_08-25-12-652.jpg", link: "go:M7" },
+      { title: "ENG × GER", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjjh-c5-ELyc1HmxqjiszKn2t3DgS-cWTJU91AIj1GPsgmDaKm4GupIjcRPuitCMIRkIb5XthzR3D9yc5Tg87kdw7WaoTz3dqgkzzfZr7a82y4hRihC2V8HLmyC6ENgohHW0ETaLLaJOFR4QhdmMg9kMaJoZXDpSK_Fn5T8CFPkGLLzlRas9l5CGFoR/s320/Picsart_25-08-29_12-16-10-907.jpg", link: "go:M8" },
+      { title: "BRA × FRA", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjZQy6XwhxQiDANM7Pr4GFhEiiyCFEKTY2WedT_4IxISNDFMjsmIpe50RxET2u7RlTSEWIDiSAOcz4DQngK2JMy2Nd4tE5Xzq8oggE32AI3X75E00Q9jfXiiWNqHvrwl0HFjU2J8lVXqueaVG3jSCjGKtzvUVgGcvsP6q7TWlRs8XTSa_kIFIJurLjm/s320/Picsart_25-08-27_18-53-59-238.jpg", link: "go:M9" },
+      { title: "MIL × LIV", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhchadIEWaJyI7NKVTWrv-E2He9-y3gAXGPXgbHo-WMJQT14ttJAnac8OD7wPltLB5SYbrFKE4s4XhavCxLwpp5T2znFEXW6lq2n3FE1mYGMTawZ05K0n66ofUhZa8NtPCt3oZj-LW6334HCA-lBpwBim0_RaQTRVyTraBLkgAd_XiKRcFiYK-M_Mdu/s320/Picsart_25-08-28_13-45-39-597.jpg", link: "go:M10" },
+      { title: "FCB × MU", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi7taMDQlfWxUoJV01py25-QOTmbVK6uNhMuaKVUvZQBwrAH0dd-0IvniP85EyGIc3VPEenZqphMZ4hAK6gi86AoUwCHyWX-J6ckRtoemkR9wvc5V3nRrAtIKmVJGGJGtfT8airbDil1M649qKVk7bD-GKXWITMugjr245upgLTNCit7FDDGYgu2v54/s320/Picsart_25-08-15_10-01-01-838.jpg", link: "go:M11" },
+      { title: "CFC × MU", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiKbWfHKTtEcDfF05m5XRn_5xbREdj5MdTHu207d33AgG4E91il6poRKjIpC8UfhnXBMIiuQkjOxtMWV9ad5D6uAfq8VfLcs3jr3u2n_0taZG6VYd7dnz2PWXWPOgBYNQftmHNxRDoYt11SZwr-z5dzKANdseC01TTqz-PCEF0ZVKdIDHoE_gCHxPxN/s320/Picsart_25-08-15_10-01-56-760.jpg", link: "go:M12" },
+      { title: "FCB × BAY", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEikq2-gt0dcJv9CM3572NanlYRCe0eUGCP4SaVusJ-T8iRSdeJmmHQkFc9lq8YiYYxJhUyBZhm3Ttc50F9xyoCBJliZ2ZkFEEtDVqKzbElxfKBR89RphPKooaZMr5WLjZqGpiID1eLjKrRuxp5yYs1luTCSNV33upiBEQskVfE0CxJZMs-5o4CzwezZ/s320/Picsart_25-08-11_10-23-32-996.jpg", link: "go:M13" },
+      { title: "BAY × FCB", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgenMWZGS28Tm0W4Tqhyphenhyphen7wwwMy0670QYkFQG5-s9NFU53SKgRO4GMcJfVu-eHAPZh2lm_CQ_R_I7kawNSnK0G3seY-gwKErV112oChfosVNk8PLutn9HTiSVfP3qU_ZusPHYZxr7LXEjIYo51qej5-0NwLwUg-d-SNVHAeLWbnBRIur4ChiWBPJNQCm/s320/Picsart_25-08-09_09-06-10-414.jpg", link: "go:M14" },
+      { title: "FCB × JUV", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiDstIlYkAE6gdzv4TWoFyGX9nok9d4KMFuHd36ttHhOm9vMcrKKXDH8oBjC5bBB3esmXhFboBUqsZV86uQBktOm80ku5X2XriTLHLJuDFB6f-g8rHC7SwLyL_3uCSkND784jzNK7g7uu1DfJ_EfWUdwc7TwQkqF5ohFcVRvMppwIMxDLkJeiUIogU9/s320/Picsart_25-08-08_07-59-09-605.jpg", link: "go:M15" },
+      { title: "SPA × POR", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjdewEZSge4Ih36By6ytIAG6De3eA7Fh7xuq5ELfEmQj0mJOQgGnWtjUG5Twi-tiOxpXKbFhC9i40CnAjMK7w01egN3IU9Kl_57SNPDmoPITHNaccmI750m-g3DKxKqeDP5i2l_XLFYVkAgS8yWxHYXr8Oqqv1hxU-bPtyVGAOV0jQgLz5wSQ8WpsES/s320/Picsart_25-08-12_06-12-09-999.jpg", link: "go:M16" },
+      { title: "RM × LEV", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjHqcCtMSZ1Osgr7wF-YFcYistb0mc-Qotyn61IRtesdheaTpRVwizJDlZmFtWsYiV-F_b2YhaHnMnr5qMrkUM2XrwxJ7rMs_iey4ZsGRTVLcWnmrPMEPRoXXrOX5FBZpHnnci5oNWlS96iUQmN-kdoXn3gk_18MewMcnd2grr_I5i14PdMX5njPdMXGvEB/s320/generated_image_7e906b4b-a883-4749-8136-95a335db970a.png", link: "go:M17" },
+      { title: "FCB × PSG", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjdX8FGcXSJSF-OwueCfQa8aYFoXKcQaEZe4dVzoVUp8LBtDIhUyF-RS0Jpu8M5jHgWeaRwgaux0QoTeW1XgcqR0-5xY8uo4TMq1KHkrzOs2kXJZKEsdVIFlUy893JpgXQU4TXNMt7V-0XkzmjI_Tq021YjrWNPBGWkH60PBUMqG0oXWH-w1tA87njI/s320/Picsart_25-08-06_13-09-54-616.jpg", link: "go:M18" },
+      { title: "RM × ATM", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj2SAIrTP5QosFt50Q8UDF9-m9S7zd7yZbR8tUGu6vs2WRnFLeHDY8rRbypQnhk6ZcoWfWScJnuMrV-YmJBSSWRuB73d-KYYlIviFIZaztjKA-y2dDCmlX5QfrBhEyQl9zPXYvbUhQpFVhXVpeff71p-_yRW0_inKDw0v3ML1drfKjYHRBB3eoNIqX4/s320/Picsart_25-08-07_08-36-12-139.jpg", link: "go:M19" }
+    ];
 
-    <!-- نفس الزر، نفس الشكل، فتح مباشر -->
-    <div class="button" onclick="window.location.href='https://rumble.com/hls-vod/72uetm/playlist.m3u8'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEisBzm-sCcOmAbMT-Ba0xc86KtPirdQBIXADW3saQqkmmwR9TNUAGDD0Xa3zu_yhoC1kjuMCCJwsxEz-LflA2NtknaIvgDU124-mIe_grBL70CEzSW57TlVCRM11ePgBChw30BBChvqwABl1b73rjeveTEV49_0DU90egd9P27MedkRH9LGN5oPr0-P/s320/Picsart_25-08-31_12-28-40-953.jpg" alt="RM × LIV">
-      <div class="button-text">RM × LIV</div>
-    </div>
-    
-    <div class="button" onclick="window.location.href='go:M2'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEibPka-KpOtpnAPXi-4QMSi4LH0gdtsQz2al-7kCwwBZ9gO-bMZLqS62WyNlyFQrzdTF3q_5BWqFMjpvatYLPxYdtW1aQESkn8yEvxFJujMbrY-zdw08Q64lMtLTmyEeFpZfb4SiAnT-NSkF-Wv00MlM2zAicJsgPi6TTnZJQfbXl1qoruibdxVIWit/s320/Picsart_25-08-28_13-44-11-577.jpg" alt="RMA × PSG">
-<div class="button-text">FCB × ARS</div>
-</div>
+    // إنشاء بطاقة مربعة
+    function createPosterCard(match) {
+      const card = document.createElement('div');
+      card.className = 'poster-card';
+      card.addEventListener('click', () => {
+        window.location.href = match.link;
+      });
+      const img = document.createElement('img');
+      img.src = match.imgSrc;
+      img.alt = match.title;
+      img.loading = "lazy";
+      const titleDiv = document.createElement('div');
+      titleDiv.className = 'match-title';
+      titleDiv.textContent = match.title;
+      card.appendChild(img);
+      card.appendChild(titleDiv);
+      return card;
+    }
 
-    
-    <div class="button" onclick="window.location.href='go:M3'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjO3iXrLT1RsP7G_xaGA8M6qv8qvlBRmICwNorc7hZruMQthphmEDhm23PylflKNbXcBxra_LbzQWgGpfKBh-N7Qu960zUNWfDNIadEKwudO256zYf1Xz6uFUXan405-H3XeX_MduQvsOaoU__k3qXLJGi8iUDnQ-x8Q2tRdj0W1HHuHkthBDcqpyua/s320/Picsart_25-08-27_17-08-49-077.jpg" alt="RMA × PSG">
-<div class="button-text">POR × FRA</div>
-</div>
+    const grid = document.getElementById('postersGrid');
+    const searchInput = document.getElementById('searchInput');
 
+    function render(filter = '') {
+      grid.innerHTML = '';
+      const lowerFilter = filter.trim().toLowerCase();
+      const filtered = lowerFilter === '' ? matchesData : matchesData.filter(m => m.title.toLowerCase().includes(lowerFilter));
+      if (filtered.length === 0) {
+        const emptyMsg = document.createElement('div');
+        emptyMsg.className = 'no-results';
+        emptyMsg.textContent = '⚽ لا توجد مباراة تطابق البحث';
+        grid.appendChild(emptyMsg);
+        return;
+      }
+      filtered.forEach(m => grid.appendChild(createPosterCard(m)));
+    }
 
-<div class="button" onclick="window.location.href='go:M4'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi0pMQSXTe-vmJTBfWOU_7qKNgWn6O59hOAEg2qqsjTF0mNNE-w_PVegQm6ko8pB76Xw7l8FOvOTukN9bE-H9phz3W0eHeYsbLgeD9U93bkJjVzBz9Rk8Xg1wukXz5PstCQC8BBObQ5stKFT6x831CZCTH46qkgi_mb5gY8Dllj7KtcmufOBuiGqpvF/s320/Picsart_25-08-29_12-12-24-952.jpg" alt="RMA × PSG">
-<div class="button-text">BRA × GER</div>
-
-</div>
-
-
-
-
-<div class="button" onclick="window.location.href='go:M5'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhNfbpWWxFizDaQrEh5-Jh0MzHmBGVSp-6pxjgv1SPP-jTZyW2-oaV7x6E-LscJYp6GX_NC0dj1v4Y6xcXmbK_n-fwM6L9269g06bMcl2xxQckdHvFznDCtbCtvhHW5Flim97aJFJrvtsFDH9BCu4WCpuPBBdkRgVddQGdoJ-FobezsCtf2rN7SHla8/s320/Picsart_25-08-04_11-46-40-769.jpg" alt="ARG × FRA">
-<div class="button-text">ARG × FRA</div>
-</div>
-
-
-
-
-
-<div class="button" onclick="window.location.href='go:M6'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj4yV27yvjTXWHxMrcTazqHXlyVZKOpJI_FubJVMDW3tvyQP7KFjUo-Z1ADXd2_KlWg8PESbvwket4oXtocMPC16rl5NyLonYfFS9BlvS-7K-vaJ3JKpLwL_8dB6BcksSckW7_bOCaRGuhUGsai9vhf1iWKXTcu2JdSLpM13XAUHkb7vxDFktRBJMq5/s320/Picsart_25-08-16_08-05-50-229.jpg" alt="RMA × PSG">
-<div class="button-text">FCB × RM</div>
-</div>
-
-
-
-
-<div class="button" onclick="window.location.href='go:M7'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhc3RXwfBlsGdiaEagpWgsN3K0da93mDEdPNq1TJnag_RL3NTxrXkLt8F_74hnJ3eZgB8xTz5EJs4_0s62Ou-kDUzte5jyKaDWaV2y8ISRFYG0y4H_CrlIBoN7go3tm7c5Etb0wBOUnYRrhmoU0zzTsDXhXYc5T4PiliG4yh6IL0uRDmCmqb39eSfKU/s320/Picsart_25-08-17_08-25-12-652.jpg" alt="RMA × PSG">
-<div class="button-text">GER × BRA</div>
-</div>
-
-
-
-
-
-<div class="button" onclick="window.location.href='go:M8'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjjh-c5-ELyc1HmxqjiszKn2t3DgS-cWTJU91AIj1GPsgmDaKm4GupIjcRPuitCMIRkIb5XthzR3D9yc5Tg87kdw7WaoTz3dqgkzzfZr7a82y4hRihC2V8HLmyC6ENgohHW0ETaLLaJOFR4QhdmMg9kMaJoZXDpSK_Fn5T8CFPkGLLzlRas9l5CGFoR/s320/Picsart_25-08-29_12-16-10-907.jpg" alt="RMA × PSG">
-      <div class="button-text">ENG × GER</div>
-    </div>
- 
-
-
-
-<div class="button" onclick="window.location.href='go:M9'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjZQy6XwhxQiDANM7Pr4GFhEiiyCFEKTY2WedT_4IxISNDFMjsmIpe50RxET2u7RlTSEWIDiSAOcz4DQngK2JMy2Nd4tE5Xzq8oggE32AI3X75E00Q9jfXiiWNqHvrwl0HFjU2J8lVXqueaVG3jSCjGKtzvUVgGcvsP6q7TWlRs8XTSa_kIFIJurLjm/s320/Picsart_25-08-27_18-53-59-238.jpg" alt="RMA × PSG">
-<div class="button-text">BRA × FRA</div>
-</div>
-
-
-
-
-<div class="button" onclick="window.location.href='go:M10'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhchadIEWaJyI7NKVTWrv-E2He9-y3gAXGPXgbHo-WMJQT14ttJAnac8OD7wPltLB5SYbrFKE4s4XhavCxLwpp5T2znFEXW6lq2n3FE1mYGMTawZ05K0n66ofUhZa8NtPCt3oZj-LW6334HCA-lBpwBim0_RaQTRVyTraBLkgAd_XiKRcFiYK-M_Mdu/s320/Picsart_25-08-28_13-45-39-597.jpg" alt="RMA × PSG">
-<div class="button-text">MIL × LIV</div>
-</div>
-
-
-<div class="button" onclick="window.location.href='go:M11'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi7taMDQlfWxUoJV01py25-QOTmbVK6uNhMuaKVUvZQBwrAH0dd-0IvniP85EyGIc3VPEenZqphMZ4hAK6gi86AoUwCHyWX-J6ckRtoemkR9wvc5V3nRrAtIKmVJGGJGtfT8airbDil1M649qKVk7bD-GKXWITMugjr245upgLTNCit7FDDGYgu2v54/s320/Picsart_25-08-15_10-01-01-838.jpg" alt="ARG × FRA">
-<div class="button-text"> FCB × MU</div>
-</div>
-
-
-
-
-
-<div class="button" onclick="window.location.href='go:M12'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiKbWfHKTtEcDfF05m5XRn_5xbREdj5MdTHu207d33AgG4E91il6poRKjIpC8UfhnXBMIiuQkjOxtMWV9ad5D6uAfq8VfLcs3jr3u2n_0taZG6VYd7dnz2PWXWPOgBYNQftmHNxRDoYt11SZwr-z5dzKANdseC01TTqz-PCEF0ZVKdIDHoE_gCHxPxN/s320/Picsart_25-08-15_10-01-56-760.jpg" alt="ARG × FRA">
-<div class="button-text"> CFC × MU</div>
-</div>
-
-
-
-
-
-<div class="button" onclick="window.location.href='go:M13'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEikq2-gt0dcJv9CM3572NanlYRCe0eUGCP4SaVusJ-T8iRSdeJmmHQkFc9lq8YiYYxJhUyBZhm3Ttc50F9xyoCBJliZ2ZkFEEtDVqKzbElxfKBR89RphPKooaZMr5WLjZqGpiID1eLjKrRuxp5yYs1luTCSNV33upiBEQskVfE0CxJZMs-5o4CzwezZ/s320/Picsart_25-08-11_10-23-32-996.jpg" alt="LIV × ACM">
-<div class="button-text">FCB × BAY</div>
-</div>
-
-
-
-
-<div class="button" onclick="window.location.href='go:M14'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgenMWZGS28Tm0W4Tqhyphenhyphen7wwwMy0670QYkFQG5-s9NFU53SKgRO4GMcJfVu-eHAPZh2lm_CQ_R_I7kawNSnK0G3seY-gwKErV112oChfosVNk8PLutn9HTiSVfP3qU_ZusPHYZxr7LXEjIYo51qej5-0NwLwUg-d-SNVHAeLWbnBRIur4ChiWBPJNQCm/s320/Picsart_25-08-09_09-06-10-414.jpg" alt="ARG × FRA">
-<div class="button-text">BAY × FCB</div>
-</div>
-
-
-<div class="button" onclick="window.location.href='go:M15'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiDstIlYkAE6gdzv4TWoFyGX9nok9d4KMFuHd36ttHhOm9vMcrKKXDH8oBjC5bBB3esmXhFboBUqsZV86uQBktOm80ku5X2XriTLHLJuDFB6f-g8rHC7SwLyL_3uCSkND784jzNK7g7uu1DfJ_EfWUdwc7TwQkqF5ohFcVRvMppwIMxDLkJeiUIogU9/s320/Picsart_25-08-08_07-59-09-605.jpg" alt="ARG × FRA">
-<div class="button-text">FCB × JUV</div>
-</div>
-
-<div class="button" onclick="window.location.href='go:M16'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjdewEZSge4Ih36By6ytIAG6De3eA7Fh7xuq5ELfEmQj0mJOQgGnWtjUG5Twi-tiOxpXKbFhC9i40CnAjMK7w01egN3IU9Kl_57SNPDmoPITHNaccmI750m-g3DKxKqeDP5i2l_XLFYVkAgS8yWxHYXr8Oqqv1hxU-bPtyVGAOV0jQgLz5wSQ8WpsES/s320/Picsart_25-08-12_06-12-09-999.jpg" alt="ARG × FRA">
-<div class="button-text"> SPA × POR</div>
-</div>
-
-
-<div class="button" onclick="window.location.href='go:M17'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjHqcCtMSZ1Osgr7wF-YFcYistb0mc-Qotyn61IRtesdheaTpRVwizJDlZmFtWsYiV-F_b2YhaHnMnr5qMrkUM2XrwxJ7rMs_iey4ZsGRTVLcWnmrPMEPRoXXrOX5FBZpHnnci5oNWlS96iUQmN-kdoXn3gk_18MewMcnd2grr_I5i14PdMX5njPdMXGvEB/s320/generated_image_7e906b4b-a883-4749-8136-95a335db970a.png" alt="ARG × FRA">
-<div class="button-text"> RM × LEV</div>
-</div>
-
-
-<div class="button" onclick="window.location.href='go:M18'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjdX8FGcXSJSF-OwueCfQa8aYFoXKcQaEZe4dVzoVUp8LBtDIhUyF-RS0Jpu8M5jHgWeaRwgaux0QoTeW1XgcqR0-5xY8uo4TMq1KHkrzOs2kXJZKEsdVIFlUy893JpgXQU4TXNMt7V-0XkzmjI_Tq021YjrWNPBGWkH60PBUMqG0oXWH-w1tA87njI/s320/Picsart_25-08-06_13-09-54-616.jpg" alt="ARG × FRA">
-<div class="button-text">FCB × PSG</div>
-</div>
-
-<div class="button" onclick="window.location.href='go:M19'">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj2SAIrTP5QosFt50Q8UDF9-m9S7zd7yZbR8tUGu6vs2WRnFLeHDY8rRbypQnhk6ZcoWfWScJnuMrV-YmJBSSWRuB73d-KYYlIviFIZaztjKA-y2dDCmlX5QfrBhEyQl9zPXYvbUhQpFVhXVpeff71p-_yRW0_inKDw0v3ML1drfKjYHRBB3eoNIqX4/s320/Picsart_25-08-07_08-36-12-139.jpg" alt="ARG × FRA">
-<div class="button-text">RM × ATM</div>
-</div>
-
-
-    </div>
-
-  </div>
-
+    searchInput.addEventListener('input', (e) => render(e.target.value));
+    render('');
+  </script>
 </body>
 </html>
