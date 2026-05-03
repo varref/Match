@@ -17,6 +17,9 @@ body {
   opacity: 0;
   transition: opacity 1.5s ease;
 }
+    body {
+  user-select: none;
+    }
 
     body {
       background-color: #000000;
@@ -302,6 +305,26 @@ body {
 
     window.addEventListener("load", function () {
   document.body.style.opacity = "1";
+});
+
+    // منع النسخ والقص
+document.addEventListener("copy", e => e.preventDefault());
+document.addEventListener("cut", e => e.preventDefault());
+
+// منع التحديد
+document.addEventListener("selectstart", e => e.preventDefault());
+
+// منع كليك يمين
+document.addEventListener("contextmenu", e => e.preventDefault());
+
+// منع اختصارات
+document.addEventListener("keydown", function(e) {
+  if (
+    e.ctrlKey && (e.key === "c" || e.key === "u" || e.key === "s") ||
+    e.key === "F12"
+  ) {
+    e.preventDefault();
+  }
 });
 
     const grid = document.getElementById('postersGrid');
