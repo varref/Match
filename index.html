@@ -100,8 +100,31 @@ body {
       aspect-ratio: 1 / 1;
       object-fit: cover;
       display: block;
-      transition: transform 0.35s ease, filter 0.3s ease;
+      transition: transform 0.35s ease, filter 0.3s ease, opacity 0.4s ease;
       background-color: #111;
+      opacity: 0; /* مخفية في البداية حتى يتم تحميلها */
+    }
+
+    /* تأثير الهيكل العظمي (Skeleton Screen + Shimmer) */
+    .poster-card img.skeleton-img {
+      background: linear-gradient(110deg, #2a2a2a 8%, #3e3e3e 18%, #2a2a2a 33%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s linear infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+    /* الصورة بعد التحميل */
+    .poster-card img.loaded {
+      opacity: 1;
     }
 
     .poster-card:hover {
@@ -287,7 +310,7 @@ body {
       { title: "RM × ATM", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj2SAIrTP5QosFt50Q8UDF9-m9S7zd7yZbR8tUGu6vs2WRnFLeHDY8rRbypQnhk6ZcoWfWScJnuMrV-YmJBSSWRuB73d-KYYlIviFIZaztjKA-y2dDCmlX5QfrBhEyQl9zPXYvbUhQpFVhXVpeff71p-_yRW0_inKDw0v3ML1drfKjYHRBB3eoNIqX4/s320/Picsart_25-08-07_08-36-12-139.jpg", link: "https://rumble.com/hls-vod/72yawa/playlist.m3u8" }
     ];
 
-    // إنشاء بطاقة مربعة
+    // إنشاء بطاقة مربعة مع تأثير Skeleton على الصورة
     function createPosterCard(match) {
       const card = document.createElement('div');
       card.className = 'poster-card';
@@ -298,6 +321,40 @@ body {
       img.src = match.imgSrc;
       img.alt = match.title;
       img.loading = "lazy";
+      
+      // تطبيق تأثير الهيكل العظمي (Skeleton) قبل تحميل الصورة
+      img.classList.add('skeleton-img');
+      img.style.opacity = '0.7';
+      
+      // عند نجاح التحميل: إزالة تأثير Skeleton وإظهار الصورة
+      img.addEventListener('load', function() {
+        img.classList.remove('skeleton-img');
+        img.classList.add('loaded');
+        img.style.opacity = '1';
+      });
+      
+      // في حالة فشل التحميل: إزالة تأثير Skeleton وإظهار خلفية داكنة (اختياري)
+      img.addEventListener('error', function() {
+        img.classList.remove('skeleton-img');
+        img.style.opacity = '0.5';
+        img.style.backgroundColor = '#1a1a1a';
+      });
+      
+      // إذا كانت الصورة محملة بالفعل من الكاش (cache)
+      if (img.complete) {
+        // تحقق من نجاح التحميل
+        if (img.naturalWidth !== 0) {
+          img.classList.remove('skeleton-img');
+          img.classList.add('loaded');
+          img.style.opacity = '1';
+        } else {
+          // خطأ في التحميل
+          img.classList.remove('skeleton-img');
+          img.style.opacity = '0.5';
+          img.style.backgroundColor = '#1a1a1a';
+        }
+      }
+      
       const titleDiv = document.createElement('div');
       titleDiv.className = 'match-title';
       titleDiv.textContent = match.title;
@@ -307,28 +364,28 @@ body {
     }
 
     window.addEventListener("load", function () {
-  document.body.style.opacity = "1";
-});
+      document.body.style.opacity = "1";
+    });
 
     // منع النسخ والقص
-document.addEventListener("copy", e => e.preventDefault());
-document.addEventListener("cut", e => e.preventDefault());
+    document.addEventListener("copy", e => e.preventDefault());
+    document.addEventListener("cut", e => e.preventDefault());
 
-// منع التحديد
-document.addEventListener("selectstart", e => e.preventDefault());
+    // منع التحديد
+    document.addEventListener("selectstart", e => e.preventDefault());
 
-// منع كليك يمين
-document.addEventListener("contextmenu", e => e.preventDefault());
+    // منع كليك يمين
+    document.addEventListener("contextmenu", e => e.preventDefault());
 
-// منع اختصارات
-document.addEventListener("keydown", function(e) {
-  if (
-    e.ctrlKey && (e.key === "c" || e.key === "u" || e.key === "s") ||
-    e.key === "F12"
-  ) {
-    e.preventDefault();
-  }
-});
+    // منع اختصارات
+    document.addEventListener("keydown", function(e) {
+      if (
+        e.ctrlKey && (e.key === "c" || e.key === "u" || e.key === "s") ||
+        e.key === "F12"
+      ) {
+        e.preventDefault();
+      }
+    });
 
     const grid = document.getElementById('postersGrid');
     const searchInput = document.getElementById('searchInput');
