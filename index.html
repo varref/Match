@@ -12,16 +12,10 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* إخفاء الصفحة في البداية */
-body {
-  opacity: 0;
-  transition: opacity 1.5s ease;
-}
     body {
-  user-select: none;
-    }
-
-    body {
+      opacity: 0;
+      transition: opacity 1.5s ease;
+      user-select: none;
       background-color: #000000;
       color: #ffffff;
       font-family: 'Netflix Sans', 'Segoe UI', 'Helvetica Neue', system-ui, -apple-system, 'Roboto', sans-serif;
@@ -30,7 +24,6 @@ body {
       min-height: 100vh;
     }
 
-    /* رأس الصفحة مع شريط البحث فقط */
     .search-header {
       max-width: 1440px;
       margin: 0 auto 36px auto;
@@ -67,7 +60,6 @@ body {
       box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
     }
 
-    /* شبكة البطاقات - مربعات مثالية */
     .posters-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -78,7 +70,6 @@ body {
       align-items: start;
     }
 
-    /* البطاقة المربعة (aspect-ratio 1/1) مثل بوستر مربع أنيق */
     .poster-card {
       display: flex;
       flex-direction: column;
@@ -94,35 +85,32 @@ body {
       text-decoration: none;
     }
 
-    /* صورة مربعة تمامًا 1:1 */
+    /* ----- الصورة: تبدأ مخفية، وتظهر بسلاسة بعد التحميل ----- */
     .poster-card img {
       width: 100%;
       aspect-ratio: 1 / 1;
       object-fit: cover;
       display: block;
-      transition: transform 0.35s ease, filter 0.3s ease, opacity 0.4s ease;
       background-color: #111;
-      opacity: 0; /* مخفية في البداية حتى يتم تحميلها */
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      will-change: opacity;
     }
 
-    /* تأثير الهيكل العظمي (Skeleton Screen + Shimmer) */
-    .poster-card img.skeleton-img {
+    /* تأثير السكيليتون (خلفية متحركة) */
+    .poster-card img.skeleton {
       background: linear-gradient(110deg, #2a2a2a 8%, #3e3e3e 18%, #2a2a2a 33%);
       background-size: 200% 100%;
       animation: shimmer 1.5s linear infinite;
-      opacity: 0.7;
+      opacity: 1; /* السكيليتون مرئي بالكامل */
     }
 
     @keyframes shimmer {
-      0% {
-        background-position: -200% 0;
-      }
-      100% {
-        background-position: 200% 0;
-      }
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
     }
 
-    /* الصورة بعد التحميل */
+    /* الصورة بعد التحميل الكامل */
     .poster-card img.loaded {
       opacity: 1;
     }
@@ -143,7 +131,6 @@ body {
       transition: 0.05s linear;
     }
 
-    /* عنوان المباراة أسفل الصورة */
     .match-title {
       padding: 14px 12px 16px;
       text-align: center;
@@ -163,7 +150,6 @@ body {
       border-top-color: #3d3d3d;
     }
 
-    /* زر الصفحة الرئيسية (ثابت أسفل يمين) */
     .home-button {
       position: fixed;
       bottom: 24px;
@@ -201,7 +187,6 @@ body {
       transform: scale(0.94);
     }
 
-    /* رسالة عدم وجود نتائج */
     .no-results {
       text-align: center;
       grid-column: 1 / -1;
@@ -214,7 +199,6 @@ body {
       border: 1px dashed #2c2c2c;
     }
 
-    /* استجابة للشاشات الصغيرة */
     @media (max-width: 640px) {
       body {
         padding: 16px 16px 70px 16px;
@@ -268,15 +252,12 @@ body {
 </head>
 <body>
 
-  <!-- شريط البحث (النص: ابحث عن مباراة) -->
   <div class="search-header">
     <input type="text" id="searchInput" class="search-bar" placeholder="ابحث عن مباراة" autocomplete="off">
   </div>
 
-  <!-- شبكة البطاقات المربعة -->
   <div class="posters-grid" id="postersGrid"></div>
 
-  <!-- زر الصفحة الرئيسية -->
   <div class="home-button" onclick="window.location.href='https://varref.github.io/var/'" aria-label="الصفحة الرئيسية">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
       <path d="M12 3 2 12h3v8h6v-5h2v5h6v-8h3Z"></path>
@@ -284,89 +265,73 @@ body {
   </div>
 
   <script>
-    // جميع بيانات المباريات (نفس المحتوى الأصلي)
     const matchesData = [
-      
-    
       { title: "SPA × ARG", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhHIIb86ybSO_YJ4bdjcdDrfpOtlGOtg6tyTgW_BEPorkucDQSTaogZF2FfM6xJi3ztTq-kgy-JCblrDxpkdKOCxa35hitJjk47j7YA_VEE2ie_UtM2_zlQ0hruNg1f-YCTEC8W4p51Y1qsi7WhEKUebT9cvx1EmmbJQCbnTcLVUy0WoHsUp2tTUwWMoOZi/s1024/462002359_1784924880407750.jpg", link: "https://stream.mux.com/mZkX2qqHWwqARcqYmvfScZWbksO01q01Sl17x02mxmZ00PY.m3u8" },
       { title: "ENG × FRA", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgfbnaT-5VHnVyo_rKsXdW6B7hl1wCbzt0a3J7OWQ-Gfy-aMOlPxPSBcvtOs2edJ1AxL2AZ6_gRAsUWNhJh4f08TZ5eeKAn0JrVR7TLFH0P_-_Gp3UavmZSymRk3gD3Hwwn1725HkeGCBAeCEk-eB0Ns2EkrCr-V7Hgkaj7dDhRhQP9Yxk2OvEYO80MGmSN/s1024/32911932_1784924942037898.jpg", link: "https://streamtape.com/e/9kLoqBJJgaHaz3z/" },
       { title: "ENG × ARG", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgrcmOZNNx8N4YqwEQojklKivibG8cgLkmfzAtrd25wEDCbvqpnykaARCaCwJofip0CA3b-_XDgludvjyA5IbKZWVqtvHua0csyoUR5A9BnvdcOFTYB8Kl5vgdk4cfpT8pT5jKqvHhp_k4nyXJ71DfHhtPQKgAOwIOnP549x62Mtouj-plPu74-WucER-W8/s1024/37262909_1784925022383417.jpg", link: "https://stream.mux.com/WQvWPsUTJWULMnCuSlWIIvUZXZdiEijqtHMWwXN9bDU.m3u8" },
       { title: "FRA × SPA", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjiRrV2IIos6Ry6ShCr-zVS5MoeBmS2eDaxZQ-_kq_EDyNJZlbcZQ9XYefg8w6FAk80XVzXRwC9Ewk2sxU8N-d4dL73qwms_RaIuaa5767U8ZUVJOPS_JTvrgkfXvIj8q_eY_mvG9zCb1Dx-_U8QuRLgw47nSrIlbYBzyk_Pw33Rch4GBV0hQLcnA5wd4z_/s1024/004d678feff44080a66b731a4b970f82.jpeg", link: "https://streamtape.com/e/yVlqR3xVawU1bPj/" }
-      
-
-    
-      
-    
     ];
 
-    // إنشاء بطاقة مربعة مع تأثير Skeleton على الصورة
     function createPosterCard(match) {
       const card = document.createElement('div');
       card.className = 'poster-card';
       card.addEventListener('click', () => {
         window.location.href = match.link;
       });
+
       const img = document.createElement('img');
       img.src = match.imgSrc;
       img.alt = match.title;
       img.loading = "lazy";
-      
-      // تطبيق تأثير الهيكل العظمي (Skeleton) قبل تحميل الصورة
-      img.classList.add('skeleton-img');
-      img.style.opacity = '0.7';
-      
-      // عند نجاح التحميل: إزالة تأثير Skeleton وإظهار الصورة
+
+      // إضافة كلاس السكيليتون في البداية
+      img.classList.add('skeleton');
+
+      // عند تحميل الصورة بنجاح
       img.addEventListener('load', function() {
-        img.classList.remove('skeleton-img');
-        img.classList.add('loaded');
-        img.style.opacity = '1';
+        this.classList.remove('skeleton');
+        this.classList.add('loaded');
+        // transition سيجعل الظهور سلساً تلقائياً
       });
-      
-      // في حالة فشل التحميل: إزالة تأثير Skeleton وإظهار خلفية داكنة (اختياري)
+
+      // في حالة فشل التحميل
       img.addEventListener('error', function() {
-        img.classList.remove('skeleton-img');
-        img.style.opacity = '0.5';
-        img.style.backgroundColor = '#1a1a1a';
+        this.classList.remove('skeleton');
+        // نضع خلفية داكنة بدلاً من الصورة
+        this.style.backgroundColor = '#1a1a1a';
+        // نضيف كلاس loaded لإظهارها (شفافة؟ لا، سنعطيها لوناً)
+        this.classList.add('loaded');
+        // نغير opacity إلى 1 لرؤية الخلفية
+        this.style.opacity = '1';
       });
-      
-      // إذا كانت الصورة محملة بالفعل من الكاش (cache)
+
+      // إذا كانت الصورة محملة بالفعل من الكاش
       if (img.complete) {
-        // تحقق من نجاح التحميل
         if (img.naturalWidth !== 0) {
-          img.classList.remove('skeleton-img');
+          img.classList.remove('skeleton');
+          img.classList.add('loaded');
+        } else {
+          img.classList.remove('skeleton');
+          img.style.backgroundColor = '#1a1a1a';
           img.classList.add('loaded');
           img.style.opacity = '1';
-        } else {
-          // خطأ في التحميل
-          img.classList.remove('skeleton-img');
-          img.style.opacity = '0.5';
-          img.style.backgroundColor = '#1a1a1a';
         }
       }
-      
+
       const titleDiv = document.createElement('div');
       titleDiv.className = 'match-title';
       titleDiv.textContent = match.title;
+
       card.appendChild(img);
       card.appendChild(titleDiv);
       return card;
     }
 
-    window.addEventListener("load", function () {
-      document.body.style.opacity = "1";
-    });
-
-    // منع النسخ والقص
+    // منع النسخ والقص والتحديد وكليك يمين واختصارات
     document.addEventListener("copy", e => e.preventDefault());
     document.addEventListener("cut", e => e.preventDefault());
-
-    // منع التحديد
     document.addEventListener("selectstart", e => e.preventDefault());
-
-    // منع كليك يمين
     document.addEventListener("contextmenu", e => e.preventDefault());
-
-    // منع اختصارات
     document.addEventListener("keydown", function(e) {
       if (
         e.ctrlKey && (e.key === "c" || e.key === "u" || e.key === "s") ||
@@ -374,6 +339,10 @@ body {
       ) {
         e.preventDefault();
       }
+    });
+
+    window.addEventListener("load", function () {
+      document.body.style.opacity = "1";
     });
 
     const grid = document.getElementById('postersGrid');
