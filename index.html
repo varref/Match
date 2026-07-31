@@ -1,369 +1,527 @@
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>بطاقات المباريات | نمط Netflix</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+<!DOCTYPE html>  
+<html lang="ar">  
+<head>  
+  <meta charset="UTF-8">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">  
+  <title>بطاقات المباريات | نمط Netflix</title>  
+  <style>  
+    * {  
+      margin: 0;  
+      padding: 0;  
+      box-sizing: border-box;  
+      -webkit-tap-highlight-color: transparent;  
+    }  
+  
+    body {  
+      opacity: 0;  
+      transition: opacity 1.5s ease;  
+      user-select: none;  
+      background-color: #000000;  
+      color: #ffffff;  
+      font-family: 'Netflix Sans', 'Segoe UI', 'Helvetica Neue', system-ui, -apple-system, 'Roboto', sans-serif;  
+      padding: 20px 24px 40px 24px;  
+      letter-spacing: 0.2px;  
+      min-height: 100vh;  
+    }  
+  
+    .search-header {  
+      max-width: 1440px;  
+      margin: 0 auto 36px auto;  
+      display: flex;  
+      justify-content: center;  
+    }  
+  
+    .search-bar {  
+      width: 100%;  
+      max-width: 480px;  
+      background-color: #121212;  
+      border: 1px solid #2c2c2c;  
+      border-radius: 60px;  
+      padding: 12px 24px;  
+      color: white;  
+      font-size: 1rem;  
+      font-weight: 500;  
+      outline: none;  
+      transition: all 0.25s ease;  
+      font-family: inherit;  
+      text-align: right;  
+      direction: rtl;  
+    }  
+  
+    .search-bar::placeholder {  
+      color: #aaaaaa;  
+      font-weight: 400;  
+      font-size: 0.95rem;  
+    }  
+  
+    .search-bar:focus {  
+      border-color: #ffffff;  
+      background-color: #1a1a1a;  
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.1);  
+    }  
+  
+    .posters-grid {  
+      display: grid;  
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));  
+      gap: 32px 24px;  
+      max-width: 1440px;  
+      margin: 0 auto;  
+      justify-items: center;  
+      align-items: start;  
+    }  
+  
+    .poster-card {  
+      display: flex;  
+      flex-direction: column;  
+      width: 100%;  
+      max-width: 260px;  
+      background: #0b0b0b;  
+      border-radius: 16px;  
+      overflow: hidden;  
+      border: 1px solid #262626;  
+      transition: all 0.28s cubic-bezier(0.2, 0.9, 0.4, 1.1);  
+      cursor: pointer;  
+      box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.8);  
+      text-decoration: none;  
+    }  
+  
+    /* ----- الصورة: تبدأ مخفية، وتظهر بسلاسة بعد التحميل ----- */  
+    .poster-card img {  
+      width: 100%;  
+      aspect-ratio: 1 / 1;  
+      object-fit: cover;  
+      display: block;  
+      background-color: #111;  
+      opacity: 0;  
+      transition: opacity 0.6s ease;  
+      will-change: opacity;  
+    }  
+  
+    /* تأثير السكيليتون (خلفية متحركة) */  
+    .poster-card img.skeleton {  
+      background: linear-gradient(110deg, #2a2a2a 8%, #3e3e3e 18%, #2a2a2a 33%);  
+      background-size: 200% 100%;  
+      animation: shimmer 1.5s linear infinite;  
+      opacity: 1; /* السكيليتون مرئي بالكامل */  
+    }  
+  
+    @keyframes shimmer {  
+      0% { background-position: -200% 0; }  
+      100% { background-position: 200% 0; }  
+    }  
+  
+    /* الصورة بعد التحميل الكامل */  
+    .poster-card img.loaded {  
+      opacity: 1;  
+    }  
+  
+    .poster-card:hover {  
+      transform: translateY(-6px) scale(1.02);  
+      border-color: #ffffff;  
+      box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255,255,255,0.2);  
+    }  
+  
+    .poster-card:hover img {  
+      transform: scale(1.03);  
+      filter: brightness(1.05);  
+    }  
+  
+    .poster-card:active {  
+      transform: translateY(-2px) scale(0.99);  
+      transition: 0.05s linear;  
+    }  
+  
+    .match-title {  
+      padding: 14px 12px 16px;  
+      text-align: center;  
+      font-weight: 700;  
+      font-size: 0.95rem;  
+      letter-spacing: 0.3px;  
+      background: linear-gradient(0deg, #0a0a0a 85%, #111111 100%);  
+      color: #f0f0f0;  
+      border-top: 1px solid #262626;  
+      transition: background 0.2s, color 0.2s;  
+      line-height: 1.4;  
+    }  
+  
+    .poster-card:hover .match-title {  
+      background: #111111;  
+      color: white;  
+      border-top-color: #3d3d3d;  
+    }  
+  
+    .home-button {  
+      position: fixed;  
+      bottom: 24px;  
+      right: 24px;  
+      background: #0f0f0f;  
+      border: 1.8px solid #ffffff;  
+      border-radius: 60px;  
+      padding: 12px 20px;  
+      display: flex;  
+      align-items: center;  
+      justify-content: center;  
+      cursor: pointer;  
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);  
+      z-index: 1100;  
+      transition: all 0.25s ease;  
+      backdrop-filter: blur(4px);  
+      background-color: rgba(10, 10, 10, 0.85);  
+    }  
+  
+    .home-button:hover {  
+      background: #1f1f1f;  
+      border-color: #fff;  
+      transform: scale(1.02);  
+      box-shadow: 0 10px 24px black;  
+    }  
+  
+    .home-button svg {  
+      width: 26px;  
+      height: 26px;  
+      fill: white;  
+      transition: transform 0.2s;  
+    }  
+  
+    .home-button:active svg {  
+      transform: scale(0.94);  
+    }  
+  
+    .no-results {  
+      text-align: center;  
+      grid-column: 1 / -1;  
+      padding: 60px 20px;  
+      font-size: 1.2rem;  
+      color: #aaa;  
+      background: #050505;  
+      border-radius: 32px;  
+      margin-top: 20px;  
+      border: 1px dashed #2c2c2c;  
+    }  
+  
+    @media (max-width: 640px) {  
+      body {  
+        padding: 16px 16px 70px 16px;  
+      }  
+      .posters-grid {  
+        gap: 20px 16px;  
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));  
+      }  
+      .match-title {  
+        font-size: 0.8rem;  
+        padding: 10px 8px 12px;  
+      }  
+      .search-bar {  
+        padding: 10px 20px;  
+        font-size: 0.9rem;  
+        max-width: 95%;  
+      }  
+      .home-button {  
+        bottom: 16px;  
+        right: 16px;  
+        padding: 8px 16px;  
+      }  
+      .home-button svg {  
+        width: 22px;  
+        height: 22px;  
+      }  
+    }  
+  
+    @media (min-width: 1024px) {  
+      .posters-grid {  
+        grid-template-columns: repeat(5, minmax(190px, 220px));  
+        justify-content: center;  
+      }  
+    }  
+  
+    @media (orientation: landscape) and (max-height: 600px) {  
+      .posters-grid {  
+        gap: 16px;  
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));  
+      }  
+      .match-title {  
+        padding: 6px 6px 8px;  
+        font-size: 0.75rem;  
+      }  
+    }  
+  
+    img {  
+      pointer-events: none;  
+    }  
 
-    body {
-      opacity: 0;
-      transition: opacity 1.5s ease;
-      user-select: none;
-      background-color: #000000;
-      color: #ffffff;
-      font-family: 'Netflix Sans', 'Segoe UI', 'Helvetica Neue', system-ui, -apple-system, 'Roboto', sans-serif;
-      padding: 20px 24px 40px 24px;
-      letter-spacing: 0.2px;
-      min-height: 100vh;
-    }
-
-    .search-header {
-      max-width: 1440px;
-      margin: 0 auto 36px auto;
-      display: flex;
-      justify-content: center;
-    }
-
-    .search-bar {
-      width: 100%;
-      max-width: 480px;
-      background-color: #121212;
-      border: 1px solid #2c2c2c;
-      border-radius: 60px;
-      padding: 12px 24px;
-      color: white;
-      font-size: 1rem;
-      font-weight: 500;
-      outline: none;
-      transition: all 0.25s ease;
-      font-family: inherit;
-      text-align: right;
-      direction: rtl;
-    }
-
-    .search-bar::placeholder {
-      color: #aaaaaa;
-      font-weight: 400;
-      font-size: 0.95rem;
-    }
-
-    .search-bar:focus {
-      border-color: #ffffff;
-      background-color: #1a1a1a;
-      box-shadow: 0 0 0 2px rgba(255,255,255,0.1);
-    }
-
-    .posters-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 32px 24px;
-      max-width: 1440px;
-      margin: 0 auto;
-      justify-items: center;
-      align-items: start;
-    }
-
-    .poster-card {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      max-width: 260px;
-      background: #0b0b0b;
-      border-radius: 16px;
-      overflow: hidden;
-      border: 1px solid #262626;
-      transition: all 0.28s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-      cursor: pointer;
-      box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.8);
-      text-decoration: none;
-    }
-
-    /* ----- الصورة: تبدأ مخفية، وتظهر بسلاسة بعد التحميل ----- */
-    .poster-card img {
-      width: 100%;
-      aspect-ratio: 1 / 1;
-      object-fit: cover;
-      display: block;
-      background-color: #111;
-      opacity: 0;
-      transition: opacity 0.6s ease;
-      will-change: opacity;
-    }
-
-    /* تأثير السكيليتون (خلفية متحركة) */
-    .poster-card img.skeleton {
-      background: linear-gradient(110deg, #2a2a2a 8%, #3e3e3e 18%, #2a2a2a 33%);
-      background-size: 200% 100%;
-      animation: shimmer 1.5s linear infinite;
-      opacity: 1; /* السكيليتون مرئي بالكامل */
-    }
-
-    @keyframes shimmer {
-      0% { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-
-    /* الصورة بعد التحميل الكامل */
-    .poster-card img.loaded {
-      opacity: 1;
-    }
-
-    .poster-card:hover {
-      transform: translateY(-6px) scale(1.02);
-      border-color: #ffffff;
-      box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255,255,255,0.2);
-    }
-
-    .poster-card:hover img {
-      transform: scale(1.03);
-      filter: brightness(1.05);
-    }
-
-    .poster-card:active {
-      transform: translateY(-2px) scale(0.99);
-      transition: 0.05s linear;
-    }
-
-    .match-title {
-      padding: 14px 12px 16px;
-      text-align: center;
-      font-weight: 700;
-      font-size: 0.95rem;
-      letter-spacing: 0.3px;
-      background: linear-gradient(0deg, #0a0a0a 85%, #111111 100%);
-      color: #f0f0f0;
-      border-top: 1px solid #262626;
-      transition: background 0.2s, color 0.2s;
-      line-height: 1.4;
-    }
-
-    .poster-card:hover .match-title {
-      background: #111111;
-      color: white;
-      border-top-color: #3d3d3d;
-    }
-
-    .home-button {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: #0f0f0f;
-      border: 1.8px solid #ffffff;
-      border-radius: 60px;
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
-      z-index: 1100;
-      transition: all 0.25s ease;
-      backdrop-filter: blur(4px);
-      background-color: rgba(10, 10, 10, 0.85);
-    }
-
-    .home-button:hover {
-      background: #1f1f1f;
-      border-color: #fff;
-      transform: scale(1.02);
-      box-shadow: 0 10px 24px black;
-    }
-
-    .home-button svg {
-      width: 26px;
-      height: 26px;
-      fill: white;
-      transition: transform 0.2s;
-    }
-
-    .home-button:active svg {
-      transform: scale(0.94);
-    }
-
-    .no-results {
-      text-align: center;
-      grid-column: 1 / -1;
-      padding: 60px 20px;
-      font-size: 1.2rem;
-      color: #aaa;
-      background: #050505;
-      border-radius: 32px;
-      margin-top: 20px;
-      border: 1px dashed #2c2c2c;
-    }
-
-    @media (max-width: 640px) {
-      body {
-        padding: 16px 16px 70px 16px;
-      }
-      .posters-grid {
-        gap: 20px 16px;
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      }
-      .match-title {
-        font-size: 0.8rem;
-        padding: 10px 8px 12px;
-      }
-      .search-bar {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-        max-width: 95%;
-      }
-      .home-button {
-        bottom: 16px;
-        right: 16px;
-        padding: 8px 16px;
-      }
-      .home-button svg {
-        width: 22px;
-        height: 22px;
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .posters-grid {
-        grid-template-columns: repeat(5, minmax(190px, 220px));
+    /* ===== POPUP ===== */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.88);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        display: none;
+        align-items: center;
         justify-content: center;
-      }
+        z-index: 2000;
+        padding: 20px;
+        animation: fadeIn .25s ease;
     }
 
-    @media (orientation: landscape) and (max-height: 600px) {
-      .posters-grid {
-        gap: 16px;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      }
-      .match-title {
-        padding: 6px 6px 8px;
-        font-size: 0.75rem;
-      }
+    .modal-overlay.active {
+        display: flex;
     }
 
-    img {
-      pointer-events: none;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="search-header">
-    <input type="text" id="searchInput" class="search-bar" placeholder="ابحث عن مباراة" autocomplete="off">
-  </div>
-
-  <div class="posters-grid" id="postersGrid"></div>
-
-  <div class="home-button" onclick="window.location.href='https://varref.github.io/var/'" aria-label="الصفحة الرئيسية">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-      <path d="M12 3 2 12h3v8h6v-5h2v5h6v-8h3Z"></path>
-    </svg>
-  </div>
-
-  <script>
-    const matchesData = [
-      { title: "SPA × ARG", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhHIIb86ybSO_YJ4bdjcdDrfpOtlGOtg6tyTgW_BEPorkucDQSTaogZF2FfM6xJi3ztTq-kgy-JCblrDxpkdKOCxa35hitJjk47j7YA_VEE2ie_UtM2_zlQ0hruNg1f-YCTEC8W4p51Y1qsi7WhEKUebT9cvx1EmmbJQCbnTcLVUy0WoHsUp2tTUwWMoOZi/s1024/462002359_1784924880407750.jpg", link: "https://stream.mux.com/9XNBibCNu02Bds7M7alecus17YYWVFqF00wm5SM02gUl8Q.m3u8" },
-      { title: "ENG × FRA", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgfbnaT-5VHnVyo_rKsXdW6B7hl1wCbzt0a3J7OWQ-Gfy-aMOlPxPSBcvtOs2edJ1AxL2AZ6_gRAsUWNhJh4f08TZ5eeKAn0JrVR7TLFH0P_-_Gp3UavmZSymRk3gD3Hwwn1725HkeGCBAeCEk-eB0Ns2EkrCr-V7Hgkaj7dDhRhQP9Yxk2OvEYO80MGmSN/s1024/32911932_1784924942037898.jpg", link: "https://streamtape.com/e/9kLoqBJJgaHaz3z/" },
-      { title: "ENG × ARG", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgrcmOZNNx8N4YqwEQojklKivibG8cgLkmfzAtrd25wEDCbvqpnykaARCaCwJofip0CA3b-_XDgludvjyA5IbKZWVqtvHua0csyoUR5A9BnvdcOFTYB8Kl5vgdk4cfpT8pT5jKqvHhp_k4nyXJ71DfHhtPQKgAOwIOnP549x62Mtouj-plPu74-WucER-W8/s1024/37262909_1784925022383417.jpg", link: "https://stream.mux.com/WQvWPsUTJWULMnCuSlWIIvUZXZdiEijqtHMWwXN9bDU.m3u8" },
-      { title: "FRA × SPA", imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjiRrV2IIos6Ry6ShCr-zVS5MoeBmS2eDaxZQ-_kq_EDyNJZlbcZQ9XYefg8w6FAk80XVzXRwC9Ewk2sxU8N-d4dL73qwms_RaIuaa5767U8ZUVJOPS_JTvrgkfXvIj8q_eY_mvG9zCb1Dx-_U8QuRLgw47nSrIlbYBzyk_Pw33Rch4GBV0hQLcnA5wd4z_/s1024/004d678feff44080a66b731a4b970f82.jpeg", link: "https://stream.mux.com/O2lw8HI3DbjRa1Bx6tRxqL9hcXvv4GuZ01Urp02oRA7Jw.m3u8" }
-    ];
-
-    function createPosterCard(match) {
-      const card = document.createElement('div');
-      card.className = 'poster-card';
-      card.addEventListener('click', () => {
-        window.location.href = match.link;
-      });
-
-      const img = document.createElement('img');
-      img.src = match.imgSrc;
-      img.alt = match.title;
-      img.loading = "lazy";
-
-      // إضافة كلاس السكيليتون في البداية
-      img.classList.add('skeleton');
-
-      // عند تحميل الصورة بنجاح
-      img.addEventListener('load', function() {
-        this.classList.remove('skeleton');
-        this.classList.add('loaded');
-        // transition سيجعل الظهور سلساً تلقائياً
-      });
-
-      // في حالة فشل التحميل
-      img.addEventListener('error', function() {
-        this.classList.remove('skeleton');
-        // نضع خلفية داكنة بدلاً من الصورة
-        this.style.backgroundColor = '#1a1a1a';
-        // نضيف كلاس loaded لإظهارها (شفافة؟ لا، سنعطيها لوناً)
-        this.classList.add('loaded');
-        // نغير opacity إلى 1 لرؤية الخلفية
-        this.style.opacity = '1';
-      });
-
-      // إذا كانت الصورة محملة بالفعل من الكاش
-      if (img.complete) {
-        if (img.naturalWidth !== 0) {
-          img.classList.remove('skeleton');
-          img.classList.add('loaded');
-        } else {
-          img.classList.remove('skeleton');
-          img.style.backgroundColor = '#1a1a1a';
-          img.classList.add('loaded');
-          img.style.opacity = '1';
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(.96);
         }
-      }
-
-      const titleDiv = document.createElement('div');
-      titleDiv.className = 'match-title';
-      titleDiv.textContent = match.title;
-
-      card.appendChild(img);
-      card.appendChild(titleDiv);
-      return card;
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
     }
 
-    // منع النسخ والقص والتحديد وكليك يمين واختصارات
-    document.addEventListener("copy", e => e.preventDefault());
-    document.addEventListener("cut", e => e.preventDefault());
-    document.addEventListener("selectstart", e => e.preventDefault());
-    document.addEventListener("contextmenu", e => e.preventDefault());
+    .modal-content {
+        background: #2d2d2d;
+        border-radius: 20px;
+        padding: 32px 24px 28px;
+        width: 100%;
+        max-width: 320px;
+        text-align: center;
+        border: 1px solid #444;
+        box-shadow: 0 24px 48px rgba(0,0,0,.9);
+    }
+
+    .modal-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .modal-btn {
+        width: 100%;
+        padding: 14px 10px;
+        border-radius: 12px;
+        border: 2px solid #000;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        transition: .2s;
+    }
+
+    .modal-btn:active {
+        transform: scale(.96);
+    }
+
+    .btn-first {
+        background: #000;
+        color: #fff;
+    }
+
+    .btn-second {
+        background: #000;
+        color: #fff;
+    }
+
+    .btn-first:hover,
+    .btn-second:hover {
+        background: #1a1a1a;
+    }
+
+    @media(max-width:639px){
+        .modal-content{
+            max-width:280px;
+            padding:24px 16px 20px;
+        }
+        .modal-btn{
+            font-size:16px;
+            padding:12px;
+        }
+    }
+  </style>  
+</head>  
+<body>  
+  
+  <div class="search-header">  
+    <input type="text" id="searchInput" class="search-bar" placeholder="ابحث عن مباراة" autocomplete="off">  
+  </div>  
+  
+  <div class="posters-grid" id="postersGrid"></div>  
+  
+  <div class="home-button" onclick="window.location.href='https://varref.github.io/var/'" aria-label="الصفحة الرئيسية">  
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">  
+      <path d="M12 3 2 12h3v8h6v-5h2v5h6v-8h3Z"></path>  
+    </svg>  
+  </div>  
+
+  <!-- ===== POPUP HTML ===== -->
+  <div class="modal-overlay" id="qualityModal">
+    <div class="modal-content">
+      <div class="modal-buttons">
+        <button class="modal-btn btn-first" id="btnFirst">الشوط الأول</button>
+        <button class="modal-btn btn-second" id="btnSecond">الشوط الثاني</button>
+      </div>
+    </div>
+  </div>
+  <!-- ===== POPUP END ===== -->
+  
+  <script>  
+    // ===== MATCH DATA =====
+    const matchesData = [  
+      { 
+        title: "SPA × ARG", 
+        imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhHIIb86ybSO_YJ4bdjcdDrfpOtlGOtg6tyTgW_BEPorkucDQSTaogZF2FfM6xJi3ztTq-kgy-JCblrDxpkdKOCxa35hitJjk47j7YA_VEE2ie_UtM2_zlQ0hruNg1f-YCTEC8W4p51Y1qsi7WhEKUebT9cvx1EmmbJQCbnTcLVUy0WoHsUp2tTUwWMoOZi/s1024/462002359_1784924880407750.jpg", 
+        link: "https://stream.mux.com/9XNBibCNu02Bds7M7alecus17YYWVFqF00wm5SM02gUl8Q.m3u8" 
+      },  
+      { 
+        title: "ENG × FRA", 
+        imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgfbnaT-5VHnVyo_rKsXdW6B7hl1wCbzt0a3J7OWQ-Gfy-aMOlPxPSBcvtOs2edJ1AxL2AZ6_gRAsUWNhJh4f08TZ5eeKAn0JrVR7TLFH0P_-_Gp3UavmZSymRk3gD3Hwwn1725HkeGCBAeCEk-eB0Ns2EkrCr-V7Hgkaj7dDhRhQP9Yxk2OvEYO80MGmSN/s1024/32911932_1784924942037898.jpg", 
+        link: ["https://stream.mux.com/jMRc4VgX8900dXoQMfvyISyfq6UaTtN6xrQ01KlCLeoa4.m3u8", "https://stream.mux.com/02DKG8JvdyDdes9TFXbQ3EUniXrGR2KAXZe018TGIP1DQ.m3u8"] // رابطين (شوط أول + شوط ثاني)
+      },  
+      { 
+        title: "ENG × ARG", 
+        imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgrcmOZNNx8N4YqwEQojklKivibG8cgLkmfzAtrd25wEDCbvqpnykaARCaCwJofip0CA3b-_XDgludvjyA5IbKZWVqtvHua0csyoUR5A9BnvdcOFTYB8Kl5vgdk4cfpT8pT5jKqvHhp_k4nyXJ71DfHhtPQKgAOwIOnP549x62Mtouj-plPu74-WucER-W8/s1024/37262909_1784925022383417.jpg", 
+        link: "https://stream.mux.com/WQvWPsUTJWULMnCuSlWIIvUZXZdiEijqtHMWwXN9bDU.m3u8" 
+      },  
+      { 
+        title: "FRA × SPA", 
+        imgSrc: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjiRrV2IIos6Ry6ShCr-zVS5MoeBmS2eDaxZQ-_kq_EDyNJZlbcZQ9XYefg8w6FAk80XVzXRwC9Ewk2sxU8N-d4dL73qwms_RaIuaa5767U8ZUVJOPS_JTvrgkfXvIj8q_eY_mvG9zCb1Dx-_U8QuRLgw47nSrIlbYBzyk_Pw33Rch4GBV0hQLcnA5wd4z_/s1024/004d678feff44080a66b731a4b970f82.jpeg", 
+        link: "https://stream.mux.com/O2lw8HI3DbjRa1Bx6tRxqL9hcXvv4GuZ01Urp02oRA7Jw.m3u8" 
+      }  
+    ];  
+
+    // ===== POPUP LOGIC =====
+    const modal = document.getElementById("qualityModal");
+    const btnFirst = document.getElementById("btnFirst");
+    const btnSecond = document.getElementById("btnSecond");
+    let firstHalfLink = "";
+    let secondHalfLink = "";
+
+    function openModal(first, second) {
+      firstHalfLink = first || "";
+      secondHalfLink = second || "";
+      modal.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      modal.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    modal.addEventListener("click", function(e) {
+      if (e.target === modal) closeModal();
+    });
+
     document.addEventListener("keydown", function(e) {
-      if (
-        e.ctrlKey && (e.key === "c" || e.key === "u" || e.key === "s") ||
-        e.key === "F12"
-      ) {
-        e.preventDefault();
-      }
+      if (e.key === "Escape") closeModal();
     });
 
-    window.addEventListener("load", function () {
-      document.body.style.opacity = "1";
-    });
+    btnFirst.onclick = function() {
+      if (firstHalfLink) window.open(firstHalfLink, "_blank");
+    };
 
-    const grid = document.getElementById('postersGrid');
-    const searchInput = document.getElementById('searchInput');
+    btnSecond.onclick = function() {
+      if (secondHalfLink) window.open(secondHalfLink, "_blank");
+    };
 
-    function render(filter = '') {
-      grid.innerHTML = '';
-      const lowerFilter = filter.trim().toLowerCase();
-      const filtered = lowerFilter === '' ? matchesData : matchesData.filter(m => m.title.toLowerCase().includes(lowerFilter));
-      if (filtered.length === 0) {
-        const emptyMsg = document.createElement('div');
-        emptyMsg.className = 'no-results';
-        emptyMsg.textContent = '⚽ لا توجد مباراة تطابق البحث';
-        grid.appendChild(emptyMsg);
-        return;
-      }
-      filtered.forEach(m => grid.appendChild(createPosterCard(m)));
-    }
+    // ===== CREATE CARD =====
+    function createPosterCard(match) {  
+      const card = document.createElement('div');  
+      card.className = 'poster-card';  
 
-    searchInput.addEventListener('input', (e) => render(e.target.value));
-    render('');
-  </script>
-</body>
+      // فحص إذا كان الرابط عبارة عن مصفوفة (رابطين)
+      const isArrayLink = Array.isArray(match.link);
+
+      card.addEventListener('click', function(e) {
+        if (isArrayLink && match.link.length >= 2) {
+          // إذا كان الرابطين موجودين → نفتح البوب أب
+          e.preventDefault();
+          openModal(match.link[0], match.link[1]);
+        } else {
+          // رابط واحد → نفتح مباشرة
+          window.location.href = match.link;
+        }
+      });  
+
+      const img = document.createElement('img');  
+      img.src = match.imgSrc;  
+      img.alt = match.title;  
+      img.loading = "lazy";  
+      img.classList.add('skeleton');  
+
+      img.addEventListener('load', function() {  
+        this.classList.remove('skeleton');  
+        this.classList.add('loaded');  
+      });  
+
+      img.addEventListener('error', function() {  
+        this.classList.remove('skeleton');  
+        this.style.backgroundColor = '#1a1a1a';  
+        this.classList.add('loaded');  
+        this.style.opacity = '1';  
+      });  
+
+      if (img.complete) {  
+        if (img.naturalWidth !== 0) {  
+          img.classList.remove('skeleton');  
+          img.classList.add('loaded');  
+        } else {  
+          img.classList.remove('skeleton');  
+          img.style.backgroundColor = '#1a1a1a';  
+          img.classList.add('loaded');  
+          img.style.opacity = '1';  
+        }  
+      }  
+
+      const titleDiv = document.createElement('div');  
+      titleDiv.className = 'match-title';  
+      titleDiv.textContent = match.title;  
+
+      card.appendChild(img);  
+      card.appendChild(titleDiv);  
+      return card;  
+    }  
+
+    // ===== PREVENT COPY, ETC =====
+    document.addEventListener("copy", e => e.preventDefault());  
+    document.addEventListener("cut", e => e.preventDefault());  
+    document.addEventListener("selectstart", e => e.preventDefault());  
+    document.addEventListener("contextmenu", e => e.preventDefault());  
+    document.addEventListener("keydown", function(e) {  
+      if (  
+        e.ctrlKey && (e.key === "c" || e.key === "u" || e.key === "s") ||  
+        e.key === "F12"  
+      ) {  
+        e.preventDefault();  
+      }  
+    });  
+
+    window.addEventListener("load", function () {  
+      document.body.style.opacity = "1";  
+    });  
+
+    // ===== RENDER & SEARCH =====
+    const grid = document.getElementById('postersGrid');  
+    const searchInput = document.getElementById('searchInput');  
+
+    function render(filter = '') {  
+      grid.innerHTML = '';  
+      const lowerFilter = filter.trim().toLowerCase();  
+      const filtered = lowerFilter === '' ? matchesData : matchesData.filter(m => m.title.toLowerCase().includes(lowerFilter));  
+      if (filtered.length === 0) {  
+        const emptyMsg = document.createElement('div');  
+        emptyMsg.className = 'no-results';  
+        emptyMsg.textContent = '⚽ لا توجد مباراة تطابق البحث';  
+        grid.appendChild(emptyMsg);  
+        return;  
+      }  
+      filtered.forEach(m => grid.appendChild(createPosterCard(m)));  
+    }  
+
+    searchInput.addEventListener('input', (e) => render(e.target.value));  
+    render('');  
+  </script>  
+</body>  
 </html>
